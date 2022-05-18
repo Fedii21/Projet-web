@@ -1,0 +1,48 @@
+generator:
+  class: sfDoctrineGenerator
+  param:
+    model_class:           IStoreItem
+    theme:                 admin
+    non_verbose_templates: true
+    with_show:             false
+    singular:              ~
+    plural:                ~
+    route_prefix:          i_store_item
+    with_doctrine_route:   true
+    actions_base_class:    sfActions
+
+    config:
+      actions:
+        _new:
+          label:      Nouveau
+      fields:
+        name:         { label: Nom }
+        short_description: { label: Description courte }
+        details:      { label: Détails }
+        unit_cost:    { label: Prix unitaire }
+        weight:       { label: Poids }
+        category_id:  { label: Catégorie }
+        brand_id:     { label: Marque }
+        is_activated: { label: Activé }
+      list:
+        title:        Gestion des articles
+        layout:   tabular
+        display:      [name, short_description, unit_cost, is_activated]
+        max_per_page: 10
+        object_actions:
+          _edit:
+            label:    modifier
+        batch_actions: {}
+      filter:  ~
+      form:    ~
+      edit:
+        title: Modifier l'article "%%name%%"
+        actions:
+          _list:   { label: revenir à la liste }
+          _save:   { label: enregistrer }
+      new:
+        title: Ajouter un nouveau article
+        actions:
+          _list:   { label: revenir à la liste }
+          _save:   { label: enregistrer }
+          _save_and_add:  { label: enregistrer et ajouter }

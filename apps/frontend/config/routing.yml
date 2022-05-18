@@ -1,0 +1,148 @@
+# You can find more information about this file on the symfony website:
+# http://www.symfony-project.org/reference/1_4/en/10-Routing
+
+# default rules
+#homepage:
+#  url:   /
+#  param: { module: default, action: index }
+
+# PAGE D'ACCUEIL
+homepage:
+  url:   /
+  param: { module: homepage, action: index }
+
+# Listing des articles valides d'une catégorie
+category:
+  url:      /category/:slug
+  class:    sfDoctrineRoute
+  param:    { module: category, action: show }
+  options:  { model: IStoreCategory, type: object }
+
+# Détails d'un article (deux routes possibles)
+item_show_user:
+  url:     /item/:name_slug/:brand_slug/:id/:description_slug
+  class:   sfDoctrineRoute
+  param:   { module: item, action: show }
+  options:
+    model: IStoreItem
+    type: object
+    method_for_query: retrieveActiveItem
+  requirements:
+    id: \d+
+    sf_method: [get]
+    
+item:
+  url:    /item/:id
+  class:  sfDoctrineRoute
+  param:  { module: item, action: show }
+  options:
+    model: IStoreItem
+    type: object
+    method_for_query: retrieveActiveItem
+  requirements:
+    id: \d+
+
+# Module de recherche des articles
+item_search:
+  url:   /search
+  param: { module: item, action: search }
+
+
+# Affiche la panier virtuel de l'utilisateur
+cart_show:
+   url:   /cart
+   param: { module: cart, action: show }
+
+# Ajoute un article dans le panier
+cart_add:
+  url:    /cart/add/:id
+  param:  { module: cart, action: add }
+  class: sfRequestRoute
+  requirements:
+    id: \d+
+    sf_method: [post]
+
+# Supprime un article du panier
+cart_delete:
+  url:    /cart/delete/:id
+  param:  { module: cart, action: delete }
+  class: sfRequestRoute
+  requirements:
+    id: \d+
+    sf_method: [post]
+
+# Mise à jour de la quantité d'un article
+cart_update:
+  url:    /cart/update/:id
+  param:  { module: cart, action: update }
+  class: sfRequestRoute
+  requirements:
+    id: \d+
+    sf_method: [post]
+
+# Vide le panier
+cart_clear:
+  url:    /cart/clear
+  param:  { module: cart, action: clear }
+  class: sfRequestRoute
+  requirements:
+    sf_method: [post]
+
+# Commander le panier
+cart_order:
+  url:  /cart/order
+  param:  { module: cart, action: order }
+  class: sfRequestRoute
+  requirements:
+    sf_method: [post]
+
+# Défini automatiquement toutes les actions
+#    pour le module account
+account:
+  class:   sfDoctrineRouteCollection
+  options: { model: sfGuardUser }
+
+# Acceder à la page du compte client
+account_show:
+  url:  /account/show
+  param: { module: account, action: show }
+
+# Page de confirmation d'un commande
+order_confirm:
+  url:  /order/confirm
+  param: { module: order, action: confirm }
+
+# Validation du formulaire de creation de la commande
+#   et creation de la commande en base
+order_create:
+  url:  /order/create
+  param: { module: order, action: create }
+  class: sfRequestRoute
+  requirements:
+    sf_method: [post]
+
+# Affiche la page récapitulatif d'une commande d'un client
+order:
+  url:    /order/:id
+  class:  sfDoctrineRoute
+  param:  { module: order,action: show }
+  options:
+    model: IStoreOrder
+    type: object
+  requirements:
+    id: \d+
+    
+#default:
+#  url:   /:module/:action/*
+
+#sf_guard_signin:
+#  url:   /login
+#  param: { module: sfGuardAuth, action: signin }
+#
+#sf_guard_signout:
+#  url:   /logout
+#  param: { module: sfGuardAuth, action: signout }
+#
+#sf_guard_password:
+#  url:   /request_password
+#  param: { module: sfGuardAuth, action: password }

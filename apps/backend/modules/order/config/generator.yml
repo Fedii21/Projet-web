@@ -1,0 +1,32 @@
+generator:
+  class: sfDoctrineGenerator
+  param:
+    model_class:           IStoreOrder
+    theme:                 admin
+    non_verbose_templates: true
+    with_show:             false
+    singular:              ~
+    plural:                ~
+    route_prefix:          i_store_order
+    with_doctrine_route:   true
+    actions_base_class:    sfActions
+
+    config:
+      actions: ~
+      fields:
+        user: { label: Client }
+        is_validated: { label: Validée }
+      list:
+        title:         Gestion des commandes
+        layout:        tabular
+        display:       [id, user, date,is_validated]
+        max_per_page:  10
+        sort:          [is_validated, desc]
+        batch_actions:
+          valid:
+            label: Valider
+        object_actions:
+          valid:
+            label: Valider
+      filter:  ~
+      form:    ~

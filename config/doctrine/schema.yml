@@ -1,0 +1,136 @@
+IStoreCategory:
+  actAs:
+    Timestampable: ~
+    Sluggable:
+      fields: [name]
+  columns:
+    name: { type: string(255), notnull: true, unique: true }
+    parent_category_id: { type: integer }
+  relations:
+     IStoreCategory: { local: parent_category_id, foreign: id, foreignAlias: category }
+
+IStoreBrand:
+  actAs: { Timestampable: ~ }
+  columns:
+    name: { type: string(255), notnull: true, unique: true }
+    description: { type: string(255), notnull: true }
+    url: { type: string(255), notnull: true }
+
+IStoreItem:
+  actAs: { Timestampable: ~ }
+  columns:
+    category_id: { type: integer, notnull: true }
+    brand_id: { type: integer, notnull: true }
+    name: { type: string(255), notnull: true, unique: true }
+    image: { type: string(255), notnull: true }
+    short_description: { type: string(255), notnull: true }
+    description: { type: string(2048), notnull: true }
+    details: { type: string(4096), notnull: true }
+    unit_cost: { type: float, notnull: true }
+    weight: { type: float, notnull: true }
+    is_activated: { type: boolean, notnull: true }
+  relations:
+    IStoreCategory: { local: category_id, foreign: id, foreignAlias: IStoreItems }
+    IStoreBrand: { local: brand_id, foreign: id }
+
+IStoreComment:
+  actAs: { Timestampable: ~ }
+  columns:
+    item_id: { type: integer, notnull: true }
+    title: { type: string(255), notnull: true }
+    description: { type: string(255), notnull: true }
+    note: { type: integer, notnull: true }
+  relations:
+    IStoreItem: { local: item_id, foreign: id, foreignAlias: IStoreComments }
+
+
+#IStoreCustomer:
+#  actAs: { Timestampable: ~ }
+#  columns:
+#    login: { type: string(255), notnull: true, unique: true }
+#    password: { type: string(255), notnull: true }
+#    email: { type: string(255), notnull: true, unique: true }
+#    firstname: { type: string(255), notnull: true }
+#    lastname: { type: string(255), notnull: true }
+#    telephone: { type: string(255), notnull: true }
+#    sexe: { type: string(255), notnull: true }
+#    date_of_birth: { type: date, notnull: true }
+
+
+IStoreCustomer:
+  columns:
+    id: { type: integer, primary: true, autoincrement: true }
+    user_id: { type: integer }
+    telephone: { type: string(255), notnull: true }
+    civility: { type: integer, notnull: true }
+    date_of_birth: { type: date, notnull: true }
+  relations:
+    User:
+      class: sfGuardUser
+      local: user_id
+      foreign: id
+      type: one
+      foreignType: one
+      foreignAlias: Profile
+
+IStoreCreditCard:
+  actAs: { Timestampable: ~ }
+  columns:
+    number: { type: string(255), notnull: true }
+    type: { type: integer, notnull: true }
+    expiry_date: { type: date, notnull: true }
+
+IStoreOrder:
+  actAs: { Timestampable: ~ }
+  columns:
+    user_id: { type: integer, notnull: true }
+    credit_card_id: { type: integer }
+    address_id: { type: integer, notnull: true }
+    date: { type: date, notnull: true }
+#    payment: { type: integer, notnull: true }
+    is_validated: { type: boolean, notnull: true }
+  relations:
+    IStoreCreditCart: { local: credit_card_id, foreign: id, foreignAlias: creditCard }
+    User:
+      class: sfGuardUser
+      local: user_id
+      foreign: id
+      type: one
+      foreignType: one
+      foreignAlias: Profile
+
+IStoreOrderLine:
+  actAs: { Timestampable: ~ }
+  columns:
+    order_id: { type: integer, notnull: true }
+    item_id: { type: integer, notnull: true }
+    quantity: { type: integer, notnull: true }
+  relations:
+    IStoreOrder: { local: order_id, foreign: id, foreignAlias: order }
+    IStoreItem: { local: item_id, foreign: id, foreignAlias: item }
+
+IStoreAddress:
+  actAs: { Timestampable: ~ }
+  columns:
+    user_id: { type: integer }
+    order_id: { type: integer }
+    street: { type: string(255), notnull: true }
+    state:  { type: string(255), notnull: true }
+    city:  { type: string(255), notnull: true }
+    zipcode:  { type: integer, notnull: true }
+    country:  { type: string(255), notnull: true }
+  relations:
+    User:
+      class: sfGuardUser
+      local: user_id
+      foreign: id
+      type: one
+      foreignType: one
+      foreignAlias: Address
+    Order:
+      class: IStoreOrder
+      local: order_id
+      foreign: id
+      type: one
+      foreignType: one
+      foreignAlias: Address
